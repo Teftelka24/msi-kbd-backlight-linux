@@ -1,0 +1,16 @@
+[Unit]
+Description=Turn off MSI keyboard backlight (MysticLight 1462:1563)
+After=systemd-udevd.service suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
+StartLimitIntervalSec=60
+StartLimitBurst=10
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 -I /usr/local/lib/kbd-backlight/kbd-backlight.py off
+# При загрузке USB-контроллер может появиться не сразу, поэтому повторяем
+Restart=on-failure
+RestartSec=2
+
+[Install]
+# multi-user.target — при включении; *sleep/suspend* — после выхода из сна
+WantedBy=multi-user.target suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
